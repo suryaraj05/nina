@@ -470,46 +470,52 @@ def health():
 
 @app.on_event("startup")
 async def startup():
-    """Initialize Playwright at startup only when USE_PLAYWRIGHT is enabled."""
-    if not USE_PLAYWRIGHT:
-        print("=" * 60)
-        print("Nina: client-only mode (Playwright disabled)")
-        print("  Steps are returned for the SDK to run in the user's browser.")
-        print("=" * 60)
-        return
-    if sys.platform == "win32":
-        print("=" * 60)
-        print("Initializing Playwright on Windows...")
-        print("=" * 60)
-        
-        # Create queue and start dedicated worker thread
-        global _playwright_queue, _playwright_thread
-        _playwright_queue = queue.Queue()
-        _playwright_thread = threading.Thread(target=_playwright_worker, daemon=False, name="PlaywrightWorker")
-        _playwright_thread.start()
-        
-        # Wait a bit for initialization
-        import time
-        time.sleep(2)
-        
-        if _playwright_thread.is_alive() and _sync_pw is not None:
-            print("[OK] Playwright initialized successfully at startup")
-            print(f"  Browser: {_sync_browser is not None}")
-            print(f"  Page: {_sync_page is not None}")
+    """Initialize Playwright at startup only when USE_PLAYWRIGHT is enabled.
+    Wrapped in try/except so missing env vars or Playwright errors don't crash the app.
+    """
+    try:
+        if not USE_PLAYWRIGHT:
+            print("=" * 60)
+            print("Nina: client-only mode (Playwright disabled)")
+            print("  Steps are returned for the SDK to run in the user's browser.")
+            print("=" * 60)
+            return
+        if sys.platform == "win32":
+            print("=" * 60)
+            print("Initializing Playwright on Windows...")
+            print("=" * 60)
+
+            # Create queue and start dedicated worker thread
+            global _playwright_queue, _playwright_thread
+            _playwright_queue = queue.Queue()
+            _playwright_thread = threading.Thread(target=_playwright_worker, daemon=False, name="PlaywrightWorker")
+            _playwright_thread.start()
+
+            # Wait a bit for initialization
+            import time
+            time.sleep(2)
+
+            if _playwright_thread.is_alive() and _sync_pw is not None:
+                print("[OK] Playwright initialized successfully at startup")
+                print(f"  Browser: {_sync_browser is not None}")
+                print(f"  Page: {_sync_page is not None}")
+            else:
+                print("[ERROR] Playwright initialization may have failed")
+                print("  Check logs above for errors")
+            print("=" * 60)
         else:
-            print("[ERROR] Playwright initialization may have failed")
-            print("  Check logs above for errors")
-        print("=" * 60)
-    else:
-        # On other platforms, initialize async Playwright
-        global pw, browser, page
-        try:
-            pw = await async_playwright().start()
-            browser = await pw.chromium.launch(headless=False)
-            page = await browser.new_page()
-            print("✓ Playwright initialized successfully")
-        except Exception as e:
-            print(f"✗ Playwright initialization failed: {str(e)}")
+            # On other platforms, initialize async Playwright
+            global pw, browser, page
+            try:
+                pw = await async_playwright().start()
+                browser = await pw.chromium.launch(headless=False)
+                page = await browser.new_page()
+                print("✓ Playwright initialized successfully")
+            except Exception as e:
+                print(f"✗ Playwright initialization failed: {str(e)}")
+    except Exception as e:
+        # Never crash the app on startup; just log the error.
+        print(f"[startup] Unhandled startup error: {e}")
 
 @app.on_event("shutdown")
 async def shutdown():

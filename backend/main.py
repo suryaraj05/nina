@@ -466,7 +466,7 @@ async def ensure_playwright():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "version": "1.0"}
+    return {"status": "ok"}
 
 @app.on_event("startup")
 async def startup():
@@ -1492,3 +1492,10 @@ async def delete_nfs(uid: str, domain: str):
     customer_id = customer["id"]
     db.table("nfs_trees").delete().eq("customer_id", customer_id).eq("domain", domain).execute()
     return {"status": "deleted"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)

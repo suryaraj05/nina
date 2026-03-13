@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nina API Keys</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #050712;
+        --bg-elevated: #070a18;
+        --border-subtle: #1b2336;
+        --accent: #00e5ff;
+        --accent-soft: rgba(0, 229, 255, 0.16);
+        --danger: #ff3d6b;
+        --text: #f5f7ff;
+        --muted: #8a93b8;
+        --code-bg: #050814;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px 18px 36px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top left, #071425, #02030a 55%);
+        color: var(--text);
+      }
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 22px;
+      }
+      .sidebar {
+        border-radius: 16px;
+        border: 1px solid var(--border-subtle);
+        background: linear-gradient(
+          145deg,
+          rgba(6, 10, 26, 0.98),
+          rgba(3, 5, 16, 0.98)
+        );
+        padding: 14px 16px 16px;
+      }
+      .sidebar h1 {
+        font-size: 18px;
+        margin: 0 0 4px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .sidebar p {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .nav-group-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        margin: 16px 0 6px;
+      }
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .nav-link span.bullet {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--border-subtle);
+      }
+      .nav-link.active {
+        background: radial-gradient(circle at left, var(--accent-soft), #050814);
+        color: var(--accent);
+      }
+      .nav-link.active span.bullet {
+        background: var(--accent);
+      }
+      .main {
+        border-radius: 18px;
+        border: 1px solid var(--border-subtle);
+        background: linear-gradient(
+          135deg,
+          rgba(8, 14, 32, 0.98),
+          rgba(4, 6, 18, 0.98)
+        );
+        padding: 18px 20px 18px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 229, 255, 0.5);
+        background: radial-gradient(circle at left, var(--accent-soft), #050814);
+        color: var(--accent);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      h2 {
+        margin: 0 0 4px;
+        font-size: 18px;
+      }
+      .tagline {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+        gap: 18px;
+      }
+      .card {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        background: radial-gradient(circle at top left, #090f26, #050815);
+        padding: 14px 16px 12px;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+      .card p {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      input[type="text"],
+      input[type="email"] {
+        width: 100%;
+        padding: 7px 9px;
+        border-radius: 7px;
+        border: 1px solid var(--border-subtle);
+        background: #050814;
+        color: var(--text);
+        font-size: 13px;
+        outline: none;
+      }
+      input[type="text"]:focus,
+      input[type="email"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.4);
+      }
+      .field-row {
+        margin-bottom: 10px;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--accent);
+        background: linear-gradient(135deg, #03161f, #031018);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      .btn-primary[disabled] {
+        opacity: 0.6;
+        cursor: default;
+      }
+      .btn-ghost {
+        border-radius: 7px;
+        border: 1px solid var(--border-subtle);
+        background: transparent;
+        color: var(--muted);
+        font-size: 11px;
+        padding: 4px 8px;
+        cursor: pointer;
+      }
+      .btn-ghost:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .status {
+        font-size: 12px;
+        margin-top: 8px;
+        min-height: 16px;
+      }
+      .status.ok {
+        color: #4ade80;
+      }
+      .status.err {
+        color: var(--danger);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      thead {
+        background: rgba(6, 12, 30, 0.9);
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 6px 6px;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      }
+      th {
+        font-weight: 500;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      tbody tr:hover {
+        background: rgba(8, 22, 40, 0.8);
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+      .pill-small {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        font-size: 10px;
+        color: var(--muted);
+        gap: 4px;
+      }
+      .pill-small span.dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #22c55e;
+      }
+      .copy-btn {
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        background: rgba(10, 16, 32, 0.9);
+        color: var(--muted);
+        font-size: 10px;
+        padding: 2px 6px;
+        cursor: pointer;
+      }
+      .copy-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .empty {
+        padding: 12px 6px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      @media (max-width: 900px) {
+        .page {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .sidebar {
+          display: none;
+        }
+      }
+      @media (max-width: 720px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <aside class="sidebar">
+        <h1>NI<span style="color: var(--accent)">NA</span></h1>
+        <p>Developer console for creating and managing Nina API keys.</p>
+
+        <div class="nav-group-title">SECTIONS</div>
+        <div class="nav-link active">
+          <span class="bullet"></span>
+          <span>API keys</span>
+        </div>
+        <a class="nav-link" href="./index.html">
+          <span class="bullet"></span>
+          <span>SDK docs</span>
+        </a>
+      </aside>
+
+      <main class="main">
+        <div class="pill">Nina · API Keys</div>
+        <h2>Manage API keys for your sites</h2>
+        <p class="tagline">
+          Each API key identifies a customer + website. Use it in the
+          <code>data-nina-key</code> attribute on the Nina SDK script tag.
+        </p>
+
+        <div class="layout">
+          <section class="card">
+            <h3>Existing keys</h3>
+            <p>
+              This table is powered by your Nina backend
+              (<span id="backendBase" class="mono"></span>).
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="pill-small">
+                <span class="dot"></span>
+                <span id="keysCountLabel">Loading…</span>
+              </span>
+              <button class="btn-ghost" id="refreshBtn">Refresh</button>
+            </div>
+            <div style="max-height: 260px; overflow-y: auto; border-radius: 10px; border: 1px solid rgba(15,23,42,0.9);">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>API key</th>
+                    <th>Created</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="keysBody">
+                  <tr><td class="empty" colspan="5">Loading keys…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Create a new API key</h3>
+            <p>
+              Use this form to create a customer entry and generate a new Nina
+              API key for a site.
+            </p>
+            <form id="createForm">
+              <div class="field-row">
+                <label for="custName">Site / customer name</label>
+                <input
+                  id="custName"
+                  type="text"
+                  placeholder="My Demo Store"
+                  required
+                />
+              </div>
+              <div class="field-row">
+                <label for="custEmail">Owner email</label>
+                <input
+                  id="custEmail"
+                  type="email"
+                  placeholder="owner@example.com"
+                  required
+                />
+              </div>
+              <button class="btn-primary" id="createBtn" type="submit">
+                Create API key
+              </button>
+            </form>
+            <div id="createStatus" class="status"></div>
+            <p class="status small" style="margin-top: 10px; color: var(--muted);">
+              The API key will be returned once and stored in Nina’s database.
+              Copy it into your site’s
+              <code>data-nina-key</code> attribute.
+            </p>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        const BACKEND_BASE =
+          "https://nina-production.up.railway.app".replace(/\/+$/, "");
+
+        const backendBaseEl = document.getElementById("backendBase");
+        if (backendBaseEl) backendBaseEl.textContent = BACKEND_BASE;
+
+        const keysBody = document.getElementById("keysBody");
+        const keysCountLabel = document.getElementById("keysCountLabel");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const createForm = document.getElementById("createForm");
+        const createBtn = document.getElementById("createBtn");
+        const createStatus = document.getElementById("createStatus");
+
+        function setStatus(el, msg, type) {
+          if (!el) return;
+          el.textContent = msg || "";
+          el.className = "status " + (type || "");
+        }
+
+        async function fetchKeys() {
+          if (!keysBody) return;
+          keysBody.innerHTML =
+            '<tr><td class="empty" colspan="5">Loading keys…</td></tr>';
+          setStatus(createStatus, "", "");
+          try {
+            const res = await fetch(BACKEND_BASE + "/customers", {
+              method: "GET",
+            });
+            if (!res.ok) {
+              throw new Error("HTTP " + res.status);
+            }
+            const data = await res.json();
+            const rows = Array.isArray(data) ? data : [];
+            if (keysCountLabel) {
+              keysCountLabel.textContent =
+                rows.length === 1
+                  ? "1 key"
+                  : rows.length.toString() + " keys";
+            }
+            if (!rows.length) {
+              keysBody.innerHTML =
+                '<tr><td class="empty" colspan="5">No keys yet. Create one using the form on the right.</td></tr>';
+              return;
+            }
+            keysBody.innerHTML = "";
+            rows.forEach((row) => {
+              const tr = document.createElement("tr");
+              const name = row.name || row.site_name || "(unnamed)";
+              const email = row.email || "";
+              const apiKey = row.api_key || row.apiKey || "";
+              const created =
+                row.created_at || row.createdAt || row.inserted_at || "";
+
+              const shortKey =
+                apiKey && apiKey.length > 16
+                  ? apiKey.slice(0, 4) +
+                    "…" +
+                    apiKey.slice(apiKey.length - 4)
+                  : apiKey || "—";
+
+              tr.innerHTML = `
+                <td>${escapeHtml(name)}</td>
+                <td>${escapeHtml(email)}</td>
+                <td class="mono">${escapeHtml(shortKey)}</td>
+                <td>${escapeHtml(created || "")}</td>
+                <td style="text-align:right;"></td>
+              `;
+              const btnCell = tr.lastElementChild;
+              if (btnCell && apiKey) {
+                const copyBtn = document.createElement("button");
+                copyBtn.type = "button";
+                copyBtn.className = "copy-btn";
+                copyBtn.textContent = "Copy";
+                copyBtn.addEventListener("click", () => {
+                  copyToClipboard(apiKey);
+                });
+                btnCell.appendChild(copyBtn);
+              }
+              keysBody.appendChild(tr);
+            });
+          } catch (e) {
+            if (keysBody) {
+              keysBody.innerHTML =
+                '<tr><td class="empty" colspan="5">Could not load keys from backend: ' +
+                escapeHtml(e.message || String(e)) +
+                "</td></tr>";
+            }
+            if (keysCountLabel) keysCountLabel.textContent = "Error";
+          }
+        }
+
+        function escapeHtml(str) {
+          return String(str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function copyToClipboard(text) {
+          if (!text) return;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(function () {});
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+              document.execCommand("copy");
+            } catch (e) {}
+            document.body.removeChild(ta);
+          }
+        }
+
+        if (refreshBtn) {
+          refreshBtn.addEventListener("click", function () {
+            fetchKeys();
+          });
+        }
+
+        if (createForm) {
+          createForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const name = document.getElementById("custName").value.trim();
+            const email = document.getElementById("custEmail").value.trim();
+            if (!name || !email) {
+              setStatus(
+                createStatus,
+                "Name and email are required.",
+                "err"
+              );
+              return;
+            }
+            createBtn.disabled = true;
+            setStatus(createStatus, "Creating key…", "");
+            try {
+              const res = await fetch(BACKEND_BASE + "/customers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name, email: email }),
+              });
+              if (!res.ok) {
+                throw new Error("HTTP " + res.status);
+              }
+              const body = await res.json();
+              const key =
+                body.api_key || body.apiKey || (body.customer && (body.customer.api_key || body.customer.apiKey));
+              if (key) {
+                copyToClipboard(key);
+                setStatus(
+                  createStatus,
+                  "Key created and copied to clipboard.",
+                  "ok"
+                );
+              } else {
+                setStatus(
+                  createStatus,
+                  "Key created. Could not read key from response; check backend payload.",
+                  "ok"
+                );
+              }
+              fetchKeys();
+            } catch (err) {
+              setStatus(
+                createStatus,
+                "Failed to create key: " + (err.message || String(err)),
+                "err"
+              );
+            } finally {
+              createBtn.disabled = false;
+            }
+          });
+        }
+
+        // initial load
+        fetchKeys();
+      })();
+    </script>
+  </body>
+  </html>
+
+

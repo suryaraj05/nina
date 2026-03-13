@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nina SDK – Integration Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #050712;
+        --bg-elevated: #070a18;
+        --border-subtle: #1b2336;
+        --accent: #00e5ff;
+        --accent-soft: rgba(0, 229, 255, 0.18);
+        --text: #f5f7ff;
+        --muted: #8a93b8;
+        --code-bg: #050814;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 32px 20px 40px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top left, #071425, #02030a 55%);
+        color: var(--text);
+      }
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      h1,
+      h2,
+      h3 {
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+      h1 {
+        font-size: 26px;
+        margin-bottom: 12px;
+      }
+      h2 {
+        font-size: 18px;
+        margin-top: 28px;
+        margin-bottom: 10px;
+      }
+      h3 {
+        font-size: 14px;
+        margin-top: 20px;
+        margin-bottom: 6px;
+      }
+      p {
+        margin: 6px 0 10px;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 14px;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 12px;
+        background: var(--code-bg);
+        padding: 1px 4px;
+        border-radius: 4px;
+      }
+      pre {
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 14px 16px;
+        overflow-x: auto;
+        border: 1px solid var(--border-subtle);
+        margin: 8px 0 12px;
+      }
+      pre code {
+        padding: 0;
+        background: transparent;
+      }
+      .tagline {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 18px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 229, 255, 0.5);
+        background: radial-gradient(circle at left, var(--accent-soft), #050814);
+        color: var(--accent);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .card {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        background: linear-gradient(
+          135deg,
+          rgba(8, 14, 32, 0.96),
+          rgba(5, 7, 18, 0.98)
+        );
+        padding: 16px 18px 14px;
+      }
+      .card h3 {
+        margin-top: 0;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      ul {
+        padding-left: 18px;
+        margin: 4px 0 10px;
+      }
+      li {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .highlight {
+        border-left: 2px solid var(--accent);
+        padding-left: 10px;
+        margin-top: 10px;
+      }
+      .kbd {
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid var(--border-subtle);
+        background: rgba(12, 14, 26, 0.9);
+        font-size: 11px;
+      }
+      .small {
+        font-size: 12px;
+      }
+      @media (max-width: 800px) {
+        body {
+          padding: 20px 14px 30px;
+        }
+        .grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="pill">Nina SDK · Browser Assistant</div>
+      <h1>Nina Production SDK &amp; API Key Guide</h1>
+      <p class="tagline">
+        Drop a single script tag on your site and let Nina handle navigation,
+        queries, and form-filling against your pages.
+      </p>
+
+      <div class="grid">
+        <section>
+          <div class="card">
+            <h3>1. Backend URL &amp; SDK script</h3>
+            <p>
+              After deploying to Railway, your backend has a public URL, e.g.:
+              <code>https://YOUR_BACKEND_URL</code>. The SDK script is hosted at
+              <code>/nina-sdk.js</code> on that backend.
+            </p>
+            <p>Use this script tag on any page where you want Nina:</p>
+            <pre><code>&lt;!-- Replace with your actual Railway backend URL and API key --&gt;
+&lt;script
+  src="https://YOUR_BACKEND_URL/nina-sdk.js"
+  data-nina-key="YOUR_NINA_API_KEY"
+  data-nina-api="https://YOUR_BACKEND_URL"
+  data-nina-position="bottom-right"
+  async
+&gt;&lt;/script&gt;</code></pre>
+            <p class="small">
+              If you omit <code>data-nina-api</code>, the SDK will call whatever
+              origin it was loaded from (the host in the
+              <code>src</code> attribute).
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>2. Getting a Nina API key</h3>
+            <div class="badge-row">
+              <span class="badge">Backend</span>
+              <span class="badge">Customers</span>
+              <span class="badge">Per-site key</span>
+            </div>
+            <p>
+              Nina identifies each website via a customer record. Use your
+              backend to create a customer and retrieve its API key:
+            </p>
+            <pre><code>POST /customers
+Content-Type: application/json
+
+{
+  "name":  "My Demo Store",
+  "email": "owner@example.com"
+}</code></pre>
+            <p class="small">
+              The response includes a generated API key. That key goes into the
+              <code>data-nina-key</code> attribute in the script tag. Treat it
+              like any other per-site public key: it identifies your tenant but
+              does not grant admin access to Nina itself.
+            </p>
+          </div>
+        </section>
+
+        <aside>
+          <div class="card">
+            <h3>3. Required environment variables</h3>
+            <p>On Railway (or any server), set these for the backend:</p>
+            <ul>
+              <li>
+                <code>SUPABASE_URL</code> – your Supabase project URL (NFS +
+                memory store).
+              </li>
+              <li>
+                <code>SUPABASE_KEY</code> – service role key used by the backend
+                only.
+              </li>
+              <li>
+                <code>GEMINI_API_KEY</code> – Google Gemini key used by
+                <code>gemini_client.py</code>.
+              </li>
+              <li>
+                <code>USE_PLAYWRIGHT</code> – <code>0</code> for
+                client‑only/browser execution, <code>1</code> to enable
+                Playwright on the backend.
+              </li>
+            </ul>
+            <p class="small highlight">
+              The SDK never sees these values. They are only read by the
+              FastAPI backend and Supabase/Gemini clients.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>4. Security notes</h3>
+            <ul>
+              <li>
+                Your Nina API key is scoped to your site; it is safe to embed in
+                the script tag, similar to public analytics or chat widget keys.
+              </li>
+              <li>
+                Do <span class="kbd">not</span> expose your
+                <code>SUPABASE_KEY</code> or <code>GEMINI_API_KEY</code> to the
+                browser – keep them in server-side environment variables only.
+              </li>
+              <li>
+                If you rotate a Nina API key, just update the value in your
+                script tag; no code changes required.
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <section>
+        <h2>End-to-end example</h2>
+        <p>
+          The SDK handles UI, session memory, and the browser-side execution of
+          <code>navigate</code>, <code>fill_form</code>, and
+          <code>click</code> steps returned by your Nina backend.
+        </p>
+
+        <h3>Minimal HTML page</h3>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;title&gt;My Store with Nina&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Welcome to My Store&lt;/h1&gt;
+    &lt;p&gt;Browse products and ask Nina to help you navigate.&lt;/p&gt;
+
+    &lt;!-- Nina SDK: replace with your backend URL + API key --&gt;
+    &lt;script
+      src="https://YOUR_BACKEND_URL/nina-sdk.js"
+      data-nina-key="YOUR_NINA_API_KEY"
+      data-nina-api="https://YOUR_BACKEND_URL"
+      data-nina-position="bottom-right"
+      async
+    &gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3>Customizing per environment</h3>
+        <p>
+          You can keep the same HTML and swap only the backend URL via a small
+          server-side template or build-time replacement:
+        </p>
+        <pre><code>&lt;script
+  src="{{ NINA_BACKEND_URL }}/nina-sdk.js"
+  data-nina-key="{{ NINA_API_KEY }}"
+  data-nina-api="{{ NINA_BACKEND_URL }}"
+  async
+&gt;&lt;/script&gt;</code></pre>
+        <p class="small">
+          For local development you can point both values to
+          <code>http://localhost:8000</code>. In production use your Railway
+          URL or custom domain.
+        </p>
+      </section>
+
+      <section>
+        <h2>How the SDK talks to your backend</h2>
+        <p>
+          When a user types a command, the SDK sends a POST request to your
+          backend’s <code>/run</code> endpoint:
+        </p>
+        <pre><code>POST ${API_BASE}/run
+Content-Type: application/json
+
+{
+  "user_input":   "&lt;what the user typed&gt;",
+  "base_url":     window.location.origin,
+  "api_key":      "&lt;data-nina-key&gt;",
+  "session_id":   "sess_...",
+  "extra_params": {}
+}</code></pre>
+        <p>
+          The backend:
+        </p>
+        <ul>
+          <li>Parses intent with Gemini (<code>intent_parser.py</code>).</li>
+          <li>Resolves actions using the NFS tree and Supabase.</li>
+          <li>
+            Either returns <code>navigate</code> / <code>fill_form</code> steps
+            for the SDK to execute, or an answer for query-style intents.
+          </li>
+        </ul>
+        <p class="small highlight">
+          The SDK already knows how to handle <code>needs_login</code>,
+          <code>execute_api</code>, and <code>navigate</code> results – you
+          don’t need to write any extra browser code to use them.
+        </p>
+      </section>
+    </div>
+  </body>
+  </html>
+
+

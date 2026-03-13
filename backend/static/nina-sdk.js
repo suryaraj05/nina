@@ -3,7 +3,16 @@
   const scriptTag  = document.currentScript;
   const API_KEY    = scriptTag.getAttribute("data-nina-key") || "";
   const POSITION   = scriptTag.getAttribute("data-nina-position") || "bottom-right";
-  const API_BASE   = scriptTag.getAttribute("data-nina-api") || "http://localhost:8000";
+  const API_BASE   =
+    scriptTag.getAttribute("data-nina-api") ||
+    (function() {
+      try {
+        const url = new URL(scriptTag.src, window.location.href);
+        return url.origin;
+      } catch (e) {
+        return "http://localhost:8000";
+      }
+    })();
   const PANEL_WIDTH = "420px";
 
   if (!API_KEY) {

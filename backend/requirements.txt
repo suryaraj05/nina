@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+supabase
+python-dotenv
+google-generativeai
+pydantic
+httpx
+playwright

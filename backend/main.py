@@ -69,6 +69,21 @@ app.add_middleware(
 os.makedirs("static", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Serve Nina docs / API key console from the same Railway service
+try:
+    import pathlib as _pathlib
+
+    _docs_root = _pathlib.Path(__file__).resolve().parent.parent / "docs"
+    if _docs_root.exists():
+        app.mount(
+            "/console",
+            StaticFiles(directory=str(_docs_root), html=True),
+            name="console",
+        )
+except Exception as _e:
+    # Never crash app if docs directory is missing or path resolution fails
+    print(f"[main] Skipping /console mount: {getattr(_e, 'message', _e)}")
+
 
 @app.get("/nina-sdk.js")
 async def nina_sdk():
